@@ -25,6 +25,7 @@ export default function Index() {
                 <ScrollView 
                     contentContainerStyle={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
                 >
                     <View style={styles.container}>
                         <Image 
