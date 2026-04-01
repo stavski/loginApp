@@ -1,21 +1,11 @@
-import { View, Text, StyleSheet, Image, ScrollView, KeyboardAvoidingView, Platform, Alert} from "react-native"
+import { View, Text, StyleSheet, Image, ScrollView, KeyboardAvoidingView, Platform} from "react-native"
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
 import { Link } from "expo-router"
-import { useState } from "react"
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Index() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-
-    function handleSignIn() {
-        if (!email.trim() || !password.trim()) {
-            return Alert.alert("Atention!", "Fill out the fields to log in.")
-        }   
-    }
-
+export default function Signup() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#FDFDFD" }}>
             <KeyboardAvoidingView 
@@ -23,39 +13,33 @@ export default function Index() {
                 behavior={ Platform.select({ ios: "padding", android: "height" }) }
             >
                 <ScrollView 
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    style={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.container}>
                         <Image 
-                            source={require("@/assets/login.png")}
+                            source={require("@/assets/signup.png")}
                             style={styles.illustration}
                         />
 
-                        <Text style={styles.title}>Sign in</Text>
-                        <Text style={styles.subtitle}>Access your account using your email and password.</Text>
+                        <Text style={styles.title}>Sign Up</Text>
+                        <Text style={styles.subtitle}>Create your account to gain access.</Text>
 
                         <View style={styles.form}>
-                            <Input 
-                                placeholder="Email" 
-                                keyboardType="email-address" 
-                                onChangeText={setEmail}
-                            />
-                            <Input 
-                                placeholder="Password" 
-                                secureTextEntry 
-                                onChangeText={setPassword}
-                            />
-                            <Button label="Login" onPress={handleSignIn}/>
+                            <Input placeholder="Name" />
+                            <Input placeholder="Email" keyboardType="email-address" />
+                            <Input placeholder="Password" secureTextEntry />
+                            <Input placeholder="Confirm Password" secureTextEntry />
+                            <Button label="Create"></Button>
                         </View>
 
                         <Text style={styles.footerText}>
-                            Don't have an account? {" "}
+                            Already have an account? {" "}
                             <Link 
-                                href="/signup"
+                                href="/"
                                 style={styles.footerLink}
                             >
-                                Register here.
+                                Click here.
                             </Link>
                         </Text>
                     </View>
@@ -88,7 +72,7 @@ const styles = StyleSheet.create({
         marginTop: 24,
         gap: 16,
     },
-    footerText: {
+        footerText: {
         textAlign: "center",
         marginTop: 24,
         color: "#585860",
