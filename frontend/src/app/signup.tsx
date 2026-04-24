@@ -1,11 +1,15 @@
-import { View, Text, StyleSheet, Image, ScrollView, KeyboardAvoidingView, Platform} from "react-native"
+import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform} from "react-native"
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
 import { Link } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context";
+import { globalStyles } from "../styles/globalStyles";
+import { useForm } from "react-hook-form";
 
 export default function Signup() {
+    const {control} = useForm();
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#FDFDFD" }}>
             <KeyboardAvoidingView 
@@ -16,28 +20,63 @@ export default function Signup() {
                     style={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <View style={styles.container}>
+                    <View style={globalStyles.container}>
                         <Image 
                             source={require("@/assets/signup.png")}
-                            style={styles.illustration}
+                            style={globalStyles.illustration}
                         />
 
-                        <Text style={styles.title}>Sign Up</Text>
-                        <Text style={styles.subtitle}>Create your account to gain access.</Text>
+                        <Text style={globalStyles.title}>Sign Up</Text>
+                        <Text style={globalStyles.subtitle}>Create your account to gain access.</Text>
 
-                        <View style={styles.form}>
-                            <Input placeholder="Name" />
-                            <Input placeholder="Email" keyboardType="email-address" />
-                            <Input placeholder="Password" secureTextEntry />
-                            <Input placeholder="Confirm Password" secureTextEntry />
+                        <View style={globalStyles.form}>
+                            <Input 
+                                formProps={{
+                                    name: 'name',
+                                    control
+                                }}
+                                inputProps={{ 
+                                    placeholder: 'Name',
+                                }}
+                            />
+                            <Input 
+                                formProps={{
+                                    name: 'email',
+                                    control
+                                }}
+                                inputProps={{ 
+                                    placeholder: 'E-mail',
+                                    keyboardType: "email-address" 
+                                }}
+                            />
+                            <Input 
+                                formProps={{
+                                    name: 'password',
+                                    control,
+                                }}
+                                inputProps={{ 
+                                    placeholder: 'Password', 
+                                    secureTextEntry: true
+                                }}
+                            />
+                            <Input 
+                                formProps={{
+                                    name: 'confirmPassword',
+                                    control,
+                                }}
+                                inputProps={{ 
+                                    placeholder: 'Confirm Password', 
+                                    secureTextEntry: true
+                                }}
+                            />
                             <Button label="Create"></Button>
                         </View>
 
-                        <Text style={styles.footerText}>
+                        <Text style={globalStyles.footerText}>
                             Already have an account? {" "}
                             <Link 
                                 href="/"
-                                style={styles.footerLink}
+                                style={globalStyles.footerLink}
                             >
                                 Click here.
                             </Link>
@@ -48,37 +87,3 @@ export default function Signup() {
         </SafeAreaView>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FDFDFD",
-        padding: 32,
-    },
-    illustration: {
-        width: "100%",
-        height: 330,
-        resizeMode: "contain",
-        marginTop: 62,
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 900,
-    },
-    subtitle: {
-        fontSize: 16,
-    },
-    form: {
-        marginTop: 24,
-        gap: 16,
-    },
-        footerText: {
-        textAlign: "center",
-        marginTop: 24,
-        color: "#585860",
-    },
-    footerLink: {
-        color: "#032ad7",
-        fontWeight: 700,
-    }
-}) 
