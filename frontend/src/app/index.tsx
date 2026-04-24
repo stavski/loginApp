@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 
 export default function Index() {
-    const {control, handleSubmit} = useForm({});
+    const {control, handleSubmit, formState: {errors} } = useForm({});
     const passwordRef = useRef<TextInput>(null);
 
     function handleSignIn(data: any) {
@@ -38,9 +38,17 @@ export default function Index() {
 
                         <View style={globalStyles.form}>
                             <Input 
+                                error={errors.email?.message}
                                 formProps={{
                                     name: 'email',
-                                    control
+                                    control,
+                                    rules: {
+                                        required: "E-mail is required",
+                                        pattern: {
+                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                            message: "Invalid email address"
+                                        }
+                                    }
                                 }}
                                 inputProps={{ 
                                     placeholder: 'E-mail',
@@ -51,9 +59,13 @@ export default function Index() {
                             />
                             <Input 
                                 ref={passwordRef}
+                                error={errors.password?.message}
                                 formProps={{
                                     name: 'password',
                                     control,
+                                    rules: {
+                                        required: "Password is required"  
+                                    }
                                 }}
                                 inputProps={{ 
                                     placeholder: 'Password', 

@@ -32,4 +32,9 @@ export const globalStyles = StyleSheet.create({
         resizeMode: "contain",
         marginTop: 62,
     },
+    error: {
+        fontSize: 14, 
+        marginTop: 7,
+        color: "#DC1637"
+    }
 }) 

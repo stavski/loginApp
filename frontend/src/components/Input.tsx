@@ -1,22 +1,33 @@
-import { TextInput, StyleSheet, TextInputProps } from "react-native";
+import { TextInput, StyleSheet, TextInputProps, View, Text } from "react-native";
 import { Controller, UseControllerProps } from "react-hook-form";
+import { globalStyles } from "../styles/globalStyles";
 import { forwardRef } from "react";
 
 type Props = {
     formProps: UseControllerProps;
     inputProps: TextInputProps;
+    error: string;
 }
 
-const Input = forwardRef<TextInput, Props> (({ formProps, inputProps}, ref) => {
+const Input = forwardRef<TextInput, Props> (({ formProps, inputProps, error = ''}, ref) => {
     return (
         <Controller 
             render={({ field }) => (
-                <TextInput 
-                    ref={ref}
-                    value={field.value}
-                    onChangeText={field.onChange}
-                    style={styles.input} 
-                    {...inputProps} />
+                <View>
+                    <TextInput 
+                        ref={ref}
+                        value={field.value}
+                        onChangeText={field.onChange}
+                        style={styles.input} 
+                        {...inputProps} 
+                    />
+                    {
+                    error.length > 0 &&
+                        <Text style={globalStyles.error}>
+                            {error}
+                        </Text>
+                    }
+                </View>
             )}
             { ...formProps }
         />
