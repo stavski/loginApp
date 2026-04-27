@@ -1,12 +1,12 @@
 import { TextInput, TextInputProps, View, Text } from "react-native";
-import { Controller, UseControllerProps } from "react-hook-form";
+import { Controller, UseControllerProps, FieldValues } from "react-hook-form";
 import { forwardRef } from "react";
 import { styles } from "./styles";
 
 type Props = {
     formProps: UseControllerProps;
     inputProps: TextInputProps;
-    error: string;
+    error?: string;
 }
 
 const Input = forwardRef<TextInput, Props> (({ formProps, inputProps, error = ''}, ref) => {

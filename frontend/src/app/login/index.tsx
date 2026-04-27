@@ -1,11 +1,10 @@
-import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, Alert, TextInputProps, TextInput} from "react-native"
+import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput, StyleSheet} from "react-native"
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
 import { Link } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "@/styles/globalStyles";
-import { styles } from "./styles";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 
@@ -91,3 +90,21 @@ export default function Index() {
         </SafeAreaView>
     )
 }
+
+export const styles = StyleSheet.create({
+    footerText: {
+        textAlign: "center",
+        marginTop: 24,
+        color: "#585860",
+    },
+    footerLink: {
+        color: "#032ad7",
+        fontWeight: 700,
+    },
+    illustration: {
+        width: "100%",
+        height: 330,
+        resizeMode: "contain",
+        marginTop: 62,
+    }
+}) 

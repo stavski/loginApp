@@ -1,18 +1,28 @@
-import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform} from "react-native"
+import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput, StyleSheet} from "react-native"
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
 import { Link } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "@/styles/globalStyles";
-import { styles } from "./styles";
 import { useForm } from "react-hook-form";
+import { useRef } from "react";
+import { AccountProps } from "@/contexts/AccountFormContext";
 
 export default function Signup() {
-    const {control, handleSubmit, formState: {errors} } = useForm({});
+    const emailRef = useRef<TextInput>(null);
+    const passwordRef = useRef<TextInput>(null);
+    const passwordConfirmationRef = useRef<TextInput>(null);
 
-    function handleSignIn(data: any) {
+    const {control, handleSubmit, formState: {errors}, getValues } = useForm<AccountProps>();
+    function handleSignIn(data: AccountProps) {
         console.log(data);
+    }
+
+    function validationPasswordConfirmation(passwordConfirmation: string) {
+        const { password } = getValues();
+
+        return password === passwordConfirmation || "The passwords do not match";
     }
 
     return (
@@ -50,10 +60,13 @@ export default function Signup() {
                                 }}
                                 inputProps={{ 
                                     placeholder: 'Name',
+                                    onSubmitEditing: () => emailRef.current?.focus(),
+                                    returnKeyType: 'next'
                                 }}
                             />
                             <Input 
                                 error={errors.email?.message}
+                                ref={emailRef}
                                 formProps={{
                                     name: 'email',
                                     control,
@@ -67,44 +80,55 @@ export default function Signup() {
                                 }}
                                 inputProps={{ 
                                     placeholder: 'E-mail',
-                                    keyboardType: "email-address" 
+                                    keyboardType: "email-address" ,
+                                    onSubmitEditing: () => passwordRef.current?.focus(),
+                                    returnKeyType: 'next'
                                 }}
                             />
                             <Input 
                                 error={errors.password?.message}
+                                ref={passwordRef}
                                 formProps={{
                                     name: 'password',
                                     control,
                                     rules: {
                                         required: "Password is required",
+                                        minLength: {
+                                            value: 6,
+                                            message: "The password must be at least 6 characters long"
+                                        }
                                     }
                                 }}
                                 inputProps={{ 
                                     placeholder: 'Password', 
-                                    secureTextEntry: true
+                                    secureTextEntry: true,
+                                    onSubmitEditing: () => passwordConfirmationRef.current?.focus(),
+                                    returnKeyType: 'next'
                                 }}
                             />
                             <Input 
-                                error={errors.confirmPassword?.message}
+                                error={errors.passwordConfirmation?.message}
+                                ref={passwordConfirmationRef}
                                 formProps={{
-                                    name: 'confirmPassword',
+                                    name: 'passwordConfirmation',
                                     control,
                                     rules: {
-                                        required: "Confirm Password is required",
+                                        required: "Password Confirmation is required",
+                                        validate: validationPasswordConfirmation,
                                     }
                                 }}
                                 inputProps={{ 
-                                    placeholder: 'Confirm Password', 
+                                    placeholder: 'Password Confirmation', 
                                     secureTextEntry: true
                                 }}
                             />
-                            <Button label="Create" onPress={handleSubmit(handleSignIn)}/>
+                            <Button label="Save" onPress={handleSubmit(handleSignIn)}/>
                         </View>
 
                         <Text style={styles.footerText}>
                             Already have an account? {" "}
                             <Link 
-                                href="/"
+                                href="/login"
                                 style={styles.footerLink}
                             >
                                 Click here.
@@ -116,3 +140,21 @@ export default function Signup() {
         </SafeAreaView>
     )
 }
+
+export const styles = StyleSheet.create({
+    footerText: {
+        textAlign: "center",
+        marginTop: 24,
+        color: "#585860",
+    },
+    footerLink: {
+        color: "#032ad7",
+        fontWeight: 700,
+    },
+    illustration: {
+        width: "100%",
+        height: 330,
+        resizeMode: "contain",
+        marginTop: 0,
+    }
+}) 
