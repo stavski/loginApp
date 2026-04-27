@@ -16,25 +16,5 @@ export const globalStyles = StyleSheet.create({
     form: {
         marginTop: 24,
         gap: 16,
-    },
-    footerText: {
-        textAlign: "center",
-        marginTop: 24,
-        color: "#585860",
-    },
-    footerLink: {
-        color: "#032ad7",
-        fontWeight: 700,
-    },
-    illustration: {
-        width: "100%",
-        height: 330,
-        resizeMode: "contain",
-        marginTop: 62,
-    },
-    error: {
-        fontSize: 14, 
-        marginTop: 7,
-        color: "#DC1637"
     }
 }) 
