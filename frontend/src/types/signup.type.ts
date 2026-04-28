@@ -1,4 +1,4 @@
-type AccountProps = {
+export type AccountProps = {
     name?: string,
     email?: string,
     password?: string,

@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput, StyleSheet} from "react-native"
+import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput} from "react-native"
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
@@ -7,11 +7,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "@/styles/globalStyles";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
-
-type LoginFormData = {
-    email: string;
-    password: string;
-}
+import { styles } from "@/styles/login.styles";
+import { LoginFormData } from "@/types/login.types";
 
 export default function Index() {
     const {control, handleSubmit, formState: {errors} } = useForm<LoginFormData>();
@@ -95,21 +92,3 @@ export default function Index() {
         </SafeAreaView>
     )
 }
-
-export const styles = StyleSheet.create({
-    footerText: {
-        textAlign: "center",
-        marginTop: 24,
-        color: "#585860",
-    },
-    footerLink: {
-        color: "#032ad7",
-        fontWeight: 700,
-    },
-    illustration: {
-        width: "100%",
-        height: 330,
-        resizeMode: "contain",
-        marginTop: 62,
-    }
-}) 
