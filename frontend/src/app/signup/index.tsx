@@ -7,7 +7,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "@/styles/globalStyles";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
-import { AccountProps } from "@/contexts/AccountFormContext";
 
 export default function Signup() {
     const emailRef = useRef<TextInput>(null);
@@ -15,6 +14,7 @@ export default function Signup() {
     const passwordConfirmationRef = useRef<TextInput>(null);
 
     const {control, handleSubmit, formState: {errors}, getValues } = useForm<AccountProps>();
+    
     function handleSignIn(data: AccountProps) {
         console.log(data);
     }

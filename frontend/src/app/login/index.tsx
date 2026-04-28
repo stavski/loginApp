@@ -8,8 +8,13 @@ import { globalStyles } from "@/styles/globalStyles";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 
+type LoginFormData = {
+    email: string;
+    password: string;
+}
+
 export default function Index() {
-    const {control, handleSubmit, formState: {errors} } = useForm({});
+    const {control, handleSubmit, formState: {errors} } = useForm<LoginFormData>();
     const passwordRef = useRef<TextInput>(null);
 
     function handleSignIn(data: any) {
@@ -38,7 +43,7 @@ export default function Index() {
 
                         <View style={globalStyles.form}>
                             <Input 
-                                error={errors.email?.message}
+                                error={errors.email?.message?.toString()}
                                 formProps={{
                                     name: 'email',
                                     control,
@@ -59,7 +64,7 @@ export default function Index() {
                             />
                             <Input 
                                 ref={passwordRef}
-                                error={errors.password?.message}
+                                error={errors.password?.message?.toString()}
                                 formProps={{
                                     name: 'password',
                                     control,
