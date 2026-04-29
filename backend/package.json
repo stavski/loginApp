@@ -1,0 +1,27 @@
+{
+  "name": "api-login-app",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "typescript",
+    "node.js",
+    "api"
+  ],
+  "license": "ISC",
+  "author": "Fernando Stavski",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
+  }
+}
