@@ -1,14 +1,11 @@
-import { Router } from "express";
+import { Router } from 'express';
+
+import { UserController } from '../controllers';
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    res.send("API runing!");
-});
+router.get('/', (req, res) => { res.send('API runing!'); });
 
-router.post("/login", (req, res) => {
-
-    res.json(req.body);
-});
+router.post('/users', UserController.create);
 
 export { router };
