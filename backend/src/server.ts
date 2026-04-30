@@ -1,15 +1,17 @@
 import express from "express";
+import "dotenv/config";
+
+import { router } from "./routes";
+
 
 const server = express();
 
 server.use(express.json());
 
-server.get("/", (req, res) => {
-    res.send("API runing!");
-});
+server.use(router);
 
-server.listen(3000, () => {
-    console.log("Server running on port 3000");
+server.listen(process.env.PORT || 3333, () => {
+    console.log(`Server running on port ${process.env.PORT || 3333}`);
 });
 
 export { server };
