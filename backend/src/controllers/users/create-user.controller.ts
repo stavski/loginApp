@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
+import { CreateUserBody } from "./user.schema";
+import { StatusCodes } from "http-status-codes";
 
-interface IUser {
-    name: string;
-    email: string;
-    password: string;
-    passwordConfirmation: string;
-}
+export const create = async (req: Request, res: Response) => {
+    const user = req.body as CreateUserBody;
 
-export const create = (req: Request<{}, {}, IUser>, res: Response) => {
-    console.log(req.body);
-
-    return res.send("Create!");
+    return res.status(StatusCodes.CREATED).json({
+        message: "User created",
+        data: user,
+    });
 };
