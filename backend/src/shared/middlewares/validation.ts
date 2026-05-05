@@ -2,40 +2,34 @@ import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ZodError, ZodType } from "zod";
 
-type TSchema = {
-    body?: ZodType<any>;
-    params?: ZodType<any>;
-    query?: ZodType<any>;
-    headers?: ZodType<any>;
-};
+type TProperty = 'body' | 'headers' | 'params' | 'query';
+type TSchema = Partial<Record<TProperty, ZodType<any>>>;
 
 export const validation = (schemas: TSchema): RequestHandler => {
     return (req, res, next) => {
+
         try {
-            if (schemas.body) {
-                req.body = schemas.body.parse(req.body);
-            }
+            Object.entries(schemas).forEach(([key, schema]) => {
+                const property = key as TProperty;
+                if (!schema) return;
 
-            if (schemas.params) {
-                req.params = schemas.params.parse(req.params);
-            }
+                const result = schema.safeParse(req[property]);
 
-            if (schemas.query) {
-                req.query = schemas.query.parse(req.query);
-            }
+                if (!result.success) {
+                    throw result.error;
+                }
 
-            if (schemas.headers) {
-                req.headers = schemas.headers.parse(req.headers);
-            }
+                (req as any).validated = (req as any).validated || {};
+                (req as any).validated[property] = result.data;
+            });
 
             return next();
-
         } catch (error) {
             if (error instanceof ZodError) {
                 const formattedErrors: Record<string, string> = {};
 
                 error.issues.forEach(issue => {
-                    const field = issue.path[0] as string;
+                    const field = issue.path.join('.') || 'root';
 
                     if (!formattedErrors[field]) {
                         formattedErrors[field] = issue.message;
