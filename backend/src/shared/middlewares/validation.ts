@@ -29,16 +29,26 @@ export const validation = (schemas: TSchema): RequestHandler => {
             }
 
             return next();
-            
+
         } catch (error) {
             if (error instanceof ZodError) {
+                const formattedErrors: Record<string, string> = {};
+
+                error.issues.forEach(issue => {
+                    const field = issue.path[0] as string;
+
+                    if (!formattedErrors[field]) {
+                        formattedErrors[field] = issue.message;
+                    }
+                });
+
                 return res.status(StatusCodes.BAD_REQUEST).json({
-                    error: error.issues,
+                    errors: formattedErrors,
                 });
             }
 
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                error: "Internal error",
+                error: "Internal server error",
             });
         }
     };
