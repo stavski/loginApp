@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createSchema = {
+export const createUsersSchema = {
     body: z.object({
         name: z.string().min(4).regex(/^[A-Za-z\s]+$/, "Only letters and spaces are allowed"),
         email: z.email(),
