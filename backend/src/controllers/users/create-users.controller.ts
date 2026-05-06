@@ -6,6 +6,8 @@ export const create = async (req: Request, res: Response) => {
 
     return res.status(StatusCodes.CREATED).json({
         message: "User created",
-        data: body,
+        data: {
+            body,
+        },
     });
 };

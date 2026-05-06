@@ -6,6 +6,8 @@ export const getAll = async (req: Request, res: Response) => {
 
     return res.status(StatusCodes.OK).json({
         message: "Get all users",
-        data: query,
+        data: {
+            query,
+        },
     });
 };

@@ -1,12 +1,14 @@
 import { Response, Request } from "express";
 import { StatusCodes } from "http-status-codes";
 
-export const getById = async (req: Request, res: Response) => {
+export const update = async (req: Request, res: Response) => {
+    const body = req.body;
     const params = req.params;
 
     return res.status(StatusCodes.OK).json({
-        message: "Get user by id",
+        message: "User updated",
         data: {
+            body,
             params,
         },
     });
