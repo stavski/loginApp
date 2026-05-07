@@ -16,7 +16,11 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "src/@types"
+    ]
   },
   "include": [
     "src/**/*",
@@ -27,7 +31,7 @@
     "node_modules",
     "dist",
     "build",
-    "**/*.spec.ts", 
+    "**/*.spec.ts",
     "**/*.test.ts"
   ]
 }

@@ -3,11 +3,11 @@ import { StatusCodes } from "http-status-codes";
 import { ZodError, ZodType } from "zod";
 
 type TProperty = 'body' | 'headers' | 'params' | 'query';
-type TSchema = Partial<Record<TProperty, ZodType<any>>>;
+
+type TSchema = Partial<Record<TProperty, ZodType<unknown>>>;
 
 export const validation = (schemas: TSchema): RequestHandler => {
     return (req, res, next) => {
-
         try {
             Object.entries(schemas).forEach(([key, schema]) => {
                 const property = key as TProperty;
@@ -19,8 +19,10 @@ export const validation = (schemas: TSchema): RequestHandler => {
                     throw result.error;
                 }
 
-                (req as any).validated = (req as any).validated || {};
-                (req as any).validated[property] = result.data;
+                req.validated = {
+                    ...req.validated,
+                    [property]: result.data,
+                };
             });
 
             return next();
@@ -30,7 +32,6 @@ export const validation = (schemas: TSchema): RequestHandler => {
 
                 error.issues.forEach(issue => {
                     const field = issue.path.join('.') || 'root';
-
                     if (!formattedErrors[field]) {
                         formattedErrors[field] = issue.message;
                     }
