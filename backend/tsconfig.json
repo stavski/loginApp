@@ -20,11 +20,14 @@
   },
   "include": [
     "src/**/*",
-    "tests/**/*"
+    "tests/**/*",
+    "*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "build"
+    "build",
+    "**/*.spec.ts", 
+    "**/*.test.ts"
   ]
 }
