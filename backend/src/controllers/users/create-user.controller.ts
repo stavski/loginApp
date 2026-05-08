@@ -34,7 +34,9 @@ export const create = async (req: Request, res: Response) => {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(409).json({
-                    error: "Email already exists",
+                    error: {
+                        email: "Email already exists",
+                    }
                 });
             }
         }

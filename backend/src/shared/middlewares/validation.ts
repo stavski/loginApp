@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-import { StatusCodes } from "http-status-codes";
 import { ZodError, ZodType } from "zod";
 
 type TProperty = 'body' | 'headers' | 'params' | 'query';
@@ -37,12 +36,12 @@ export const validation = (schemas: TSchema): RequestHandler => {
                     }
                 });
 
-                return res.status(StatusCodes.BAD_REQUEST).json({
+                return res.status(400).json({
                     errors: formattedErrors,
                 });
             }
 
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            return res.status(500).json({
                 error: "Internal server error",
             });
         }

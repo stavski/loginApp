@@ -1,4 +1,17 @@
+import { prisma } from "../src/lib/prisma";
 import supertest from 'supertest';
-import { server } from '../src/server';
+import { app } from "../src/app";
 
-export const testServer = supertest(server);
+export const testServer = supertest(app);
+
+beforeAll(async () => {
+    await prisma.$connect();
+});
+
+beforeEach(async () => {
+    await prisma.users.deleteMany();
+});
+
+afterAll(async () => {
+    await prisma.$disconnect();
+});
