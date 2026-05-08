@@ -38,24 +38,24 @@ A full-stack authentication and user management system featuring a **React Nativ
 *   An instance of MySQL, PostgreSQL or SQLite
 
 ### 2. Backend Setup
-# Navigate to backend folder
+Navigate to backend folder
 cd backend
 
-# Install dependencies
+Install dependencies
 npm install
 
-# Run migrations and start server
+Run migrations and start server
 npx prisma migrate dev
 npm run dev
 
 ### 3. Frontend Setup
-# Navigate to frontend folder
+Navigate to frontend folder
 cd frontend
 
-# Install dependencies
+Install dependencies
 npm install
 
-# Start the Expo server
+Start the Expo server
 npx expo start
 
 > **Note:** Remember to update the API base URL in your frontend configuration to match your machine's local IP address.
