@@ -7,6 +7,7 @@ import { getUserSchema } from "../controllers/users/get-user.schema";
 import { getAllUsersSchema } from "../controllers/users/get-all-users.schema";
 import { updateUsersSchema } from "../controllers/users/update-user.schema";
 import { deleteUserSchema } from "../controllers/users/delete-user.schema";
+import { updateUserPasswordSchema } from "../controllers/users/update-user-password.schema";
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.get("/users", validation(getAllUsersSchema), UserController.getAll);
 router.get("/users/:id", validation(getUserSchema), UserController.getById);
 router.put("/users/:id", validation(updateUsersSchema), UserController.update);
 router.delete("/users/:id", validation(deleteUserSchema), UserController.deleteById);
+router.patch("/users/:id/update-password", validation(updateUserPasswordSchema), UserController.updatePassword);
 
 export { router };
