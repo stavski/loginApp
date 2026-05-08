@@ -11,7 +11,7 @@ A full-stack authentication and user management system featuring a **React Nativ
 *   **Security:** 
     *   Password hashing using **Bcrypt**.
     *   Input validation and schema enforcement with **Zod**.
-*   **Mobile Experience:** Secure navigation, logout functionality, and password update screens.
+*   **Mobile Experience:** Secure navigation, logout functionality, and profile management screens.
 
 ---
 
@@ -30,29 +30,25 @@ A full-stack authentication and user management system featuring a **React Nativ
 *   **Bcrypt** (Security)
 
 ---
-🔧 Getting Started
-1. Prerequisites
-Node.js installed
 
-An instance of MySQL/PostgreSQL (or SQLite)
+## 🔧 Getting Started & API Reference
 
----
-2. Backend Setup
+### 1. Prerequisites
+*   Node.js installed
+*   An instance of MySQL, PostgreSQL or SQLite
+
+### 2. Backend Setup
 # Navigate to backend folder
 cd backend
 
 # Install dependencies
 npm install
 
-# Set up your .env file with your DATABASE_URL
-# Run migrations to create database tables
+# Run migrations and start server
 npx prisma migrate dev
-
-# Start the development server
 npm run dev
 
----
-3. Frontend Setup
+### 3. Frontend Setup
 # Navigate to frontend folder
 cd frontend
 
@@ -62,14 +58,25 @@ npm install
 # Start the Expo server
 npx expo start
 
----
-Note: Remember to update the API base URL in your frontend configuration to match your machine's local IP address.
+> **Note:** Remember to update the API base URL in your frontend configuration to match your machine's local IP address.
 
 ---
+
+### 🛣️ API Endpoints
+
+| Method | Route       | Description               |
+| :----- | :---------- | :------------------------ |
+| POST   | /users      | Register a new user       |
+| GET    | /users      | List all users            |
+| GET    | /users/:id  | Get specific user by ID   |
+| PUT    | /users/:id  | Update user information   |
+| DELETE | /users/:id  | Delete a user account     |
+
+---
+
 ## 📂 Project Structure
 
 ```text
 loginApp/
 ├── backend/   # Node.js REST API
 └── frontend/  # React Native / Expo Mobile App
-
