@@ -44,7 +44,9 @@ export const update = async (req: Request, res: Response) => {
             }
         });
 
-        return res.status(200).json(updatedUser);
+        return res.status(200).json({
+            data: updatedUser,
+        });
 
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
