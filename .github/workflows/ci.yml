@@ -33,9 +33,9 @@ jobs:
 
       - name: Sync Database Schema
         run: |
-          echo "Waiting for the Aiven network to stabilize..."
           sleep 10
-          npx prisma db push
+          # Adicionamos a flag --skip-generate para focar apenas no push
+          npx prisma db push --force-reset
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
