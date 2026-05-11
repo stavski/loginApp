@@ -4,6 +4,8 @@ import { app } from "../src/app";
 
 export const testServer = supertest(app);
 
+jest.setTimeout(30000);
+
 beforeAll(async () => {
     await prisma.$connect();
 });
