@@ -4,9 +4,14 @@ import jwt from "jsonwebtoken";
 
 import { prisma } from "../../lib/prisma";
 
+interface LoginUserBody {
+    email: string;
+    password: string;
+}
+
 export const login = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.validated.body as LoginUserBody;
 
         const user = await prisma.users.findUnique({
             where: {
@@ -34,6 +39,7 @@ export const login = async (req: Request, res: Response) => {
         const accessToken = jwt.sign(
             {
                 sub: user.id,
+                nonce: Math.random(),
             },
             process.env.JWT_SECRET!,
             {
@@ -44,6 +50,7 @@ export const login = async (req: Request, res: Response) => {
         const refreshToken = jwt.sign(
             {
                 sub: user.id,
+                nonce: Math.random(),
             },
             process.env.JWT_REFRESH_SECRET!,
             {
@@ -61,9 +68,7 @@ export const login = async (req: Request, res: Response) => {
             },
         });
 
-    } catch (error) {
-        console.error(error);
-
+    } catch {
         return res.status(500).json({
             error: "Internal server error",
         });

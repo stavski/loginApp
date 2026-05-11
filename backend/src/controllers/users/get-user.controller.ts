@@ -29,8 +29,7 @@ export const getById = async (req: Request, res: Response) => {
             data: user,
         });
 
-    } catch (error) {
-        console.error(error);
+    } catch {
         return res.status(500).json({
             error: "Internal server error"
         });

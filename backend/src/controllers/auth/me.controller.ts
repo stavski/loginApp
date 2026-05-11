@@ -3,10 +3,7 @@ import { Response } from "express";
 import { prisma } from "../../lib/prisma";
 import { AuthRequest } from "../../shared/middlewares/auth";
 
-export const me = async (
-    req: AuthRequest,
-    res: Response
-) => {
+export const me = async (req: AuthRequest, res: Response) => {
     const user = await prisma.users.findUnique({
         where: {
             id: req.userId,
