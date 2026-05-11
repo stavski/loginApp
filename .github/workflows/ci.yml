@@ -32,7 +32,10 @@ jobs:
         run: npx prisma generate
 
       - name: Sync Database Schema
-        run: npx prisma db push
+        run: |
+          echo "Waiting for the Aiven network to stabilize..."
+          sleep 10
+          npx prisma db push
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
