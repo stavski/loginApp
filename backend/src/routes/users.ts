@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validation } from "../shared/middlewares";
+import { validation, auth } from "../shared/middlewares";
 
 import { UserController } from "../controllers/users";
 
@@ -13,10 +13,10 @@ import { updateUserPasswordSchema } from "../controllers/users/update-user-passw
 const usersRoutes = Router();
 
 usersRoutes.post("/", validation(createUserSchema), UserController.create);
-usersRoutes.get("/", validation(getAllUsersSchema), UserController.getAll);
-usersRoutes.get("/:id", validation(getUserSchema), UserController.getById);
-usersRoutes.put("/:id", validation(updateUsersSchema), UserController.update);
-usersRoutes.delete("/:id", validation(deleteUserSchema), UserController.deleteById);
-usersRoutes.patch("/:id/update-password", validation(updateUserPasswordSchema), UserController.updatePassword);
+usersRoutes.get("/", auth, validation(getAllUsersSchema), UserController.getAll);
+usersRoutes.get("/:id", auth, validation(getUserSchema), UserController.getById);
+usersRoutes.put("/:id", auth,validation(updateUsersSchema), UserController.update);
+usersRoutes.delete("/:id", auth, validation(deleteUserSchema), UserController.deleteById);
+usersRoutes.patch("/:id/update-password", auth,validation(updateUserPasswordSchema), UserController.updatePassword);
 
 export { usersRoutes };

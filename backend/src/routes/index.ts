@@ -4,7 +4,7 @@ import { authRoutes } from "./auth";
 
 const router = Router();
 
-usersRoutes.get('/', (req, res) => { res.send('API runing!'); });
+router.get('/', (req, res) => { res.send('API runing!'); });
 
 router.use("/users", usersRoutes);
 router.use("/auth", authRoutes);
