@@ -1,7 +1,14 @@
+import jwt from "jsonwebtoken";
 import { prisma } from "../../src/lib/prisma";
 import { testServer } from "../jest.setup";
 
 describe("Get all users", () => {
+    let token: string;
+
+    beforeAll(() => {
+        token = jwt.sign({ id: 1 }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    });
+
     it("should return all users", async () => {
         await prisma.users.createMany({
             data: [
@@ -18,10 +25,13 @@ describe("Get all users", () => {
             ],
         });
 
-        const response = await testServer.get("/users").query({
-            page: 1,
-            limit: 5,
-        });
+        const response = await testServer
+            .get("/users")
+            .set("Authorization", `Bearer ${token}`)
+            .query({
+                page: 1,
+                limit: 5,
+            });
 
         expect(response.status).toBe(200);
 
@@ -51,11 +61,14 @@ describe("Get all users", () => {
             ],
         });
 
-        const response = await testServer.get("/users").query({
-            page: 1,
-            limit: 5,
-            filter: "Test User A",
-        });
+        const response = await testServer
+            .get("/users")
+            .set("Authorization", `Bearer ${token}`)
+            .query({
+                page: 1,
+                limit: 5,
+                filter: "Test User A",
+            });
 
         expect(response.status).toBe(200);
 
@@ -82,7 +95,7 @@ describe("Get all users", () => {
                     email: "testc@test.com",
                     password: "123456789",
                 },
-                 {
+                {
                     name: "Test User D",
                     email: "testd@test.com",
                     password: "123456789",
@@ -100,10 +113,13 @@ describe("Get all users", () => {
             ],
         });
 
-        const response = await testServer.get("/users").query({
-            page: 1,
-            limit: 5,
-        });
+        const response = await testServer
+            .get("/users")
+            .set("Authorization", `Bearer ${token}`)
+            .query({
+                page: 1,
+                limit: 5,
+            });
 
         expect(response.status).toBe(200);
 
@@ -115,10 +131,13 @@ describe("Get all users", () => {
     });
 
     it("should return empty array when no users exist", async () => {
-        const response = await testServer.get("/users").query({
-            page: 1,
-            limit: 5,
-        });
+        const response = await testServer
+            .get("/users")
+            .set("Authorization", `Bearer ${token}`)
+            .query({
+                page: 1,
+                limit: 5,
+            });
 
         expect(response.status).toBe(200);
 

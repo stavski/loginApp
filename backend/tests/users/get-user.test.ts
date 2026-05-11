@@ -1,7 +1,14 @@
+import jwt from "jsonwebtoken";
 import { prisma } from "../../src/lib/prisma";
 import { testServer } from "../jest.setup";
 
 describe("Get user by id", () => {
+    let token: string;
+
+    beforeAll(() => {
+        token = jwt.sign({ id: 1 }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    });
+
     it("should return a user by id", async () => {
         const user = await prisma.users.create({
             data: {
@@ -11,7 +18,9 @@ describe("Get user by id", () => {
             },
         });
 
-        const response = await testServer.get(`/users/${user.id}`);
+        const response = await testServer
+            .get(`/users/${user.id}`)
+            .set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(200);
 
@@ -24,7 +33,9 @@ describe("Get user by id", () => {
     });
 
     it("should return 404 when user does not exist", async () => {
-        const response = await testServer.get("/users/999999");
+        const response = await testServer
+            .get("/users/999999")
+            .set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(404);
 

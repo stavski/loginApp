@@ -1,7 +1,14 @@
+import jwt from "jsonwebtoken";
 import { prisma } from "../../src/lib/prisma";
 import { testServer } from "../jest.setup";
 
 describe("Update user", () => {
+    let token: string;
+
+    beforeAll(() => {
+        token = jwt.sign({ id: 1 }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    });
+
     it("should update user name and email", async () => {
         const user = await prisma.users.create({
             data: {
@@ -11,10 +18,13 @@ describe("Update user", () => {
             },
         });
 
-        const response = await testServer.put(`/users/${user.id}`).send({
-            name: "New Name",
-            email: "new@test.com",
-        });
+        const response = await testServer
+            .put(`/users/${user.id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                name: "New Name",
+                email: "new@test.com",
+            });
 
         expect(response.status).toBe(200);
 
@@ -36,10 +46,13 @@ describe("Update user", () => {
     });
 
     it("should return 404 when user does not exist", async () => {
-        const response = await testServer.put("/users/999999").send({
-            name: "New Name",
-            email: "new@test.com",
-        });
+        const response = await testServer
+            .put("/users/999999")
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                name: "New Name",
+                email: "new@test.com",
+            });
 
         expect(response.status).toBe(404);
 
@@ -70,10 +83,13 @@ describe("Update user", () => {
             },
         });
 
-        const response = await testServer.put(`/users/${user?.id}`).send({
-            name: "Updated User",
-            email: "userb@test.com",
-        });
+        const response = await testServer
+            .put(`/users/${user?.id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                name: "Updated User",
+                email: "userb@test.com",
+            });
 
         expect(response.status).toBe(409);
     });
