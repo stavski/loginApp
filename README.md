@@ -64,13 +64,30 @@ npx expo start
 
 ### 🛣️ API Endpoints
 
-| Method | Route       | Description               |
-| :----- | :---------- | :------------------------ |
-| POST   | /users      | Register a new user       |
-| GET    | /users      | List all users            |
-| GET    | /users/:id  | Get specific user by ID   |
-| PUT    | /users/:id  | Update user information   |
-| DELETE | /users/:id  | Delete a user account     |
+#### **Autenticação**
+| Método | Rota               | Descrição                                          | Autenticação |
+| :----- | :----------------- | :------------------------------------------------- | :----------: |
+| `POST` | `/auth/login`      | Realiza o login e retorna os tokens (Access/Refresh)| ❌           |
+| `POST` | `/auth/refresh`    | Renova o Access Token usando o Refresh Token       | ❌           |
+| `GET`  | `/auth/me`         | Retorna os dados do perfil do usuário logado       | 🔑 JWT       |
+
+#### **Usuários**
+| Método  | Rota                         | Descrição                                   | Autenticação |
+| :------ | :--------------------------- | :------------------------------------------ | :----------: |
+| `POST`  | `/users`                     | Cadastra um novo usuário no sistema         | ❌           |
+| `GET`   | `/users`                     | Lista todos os usuários registrados         | 🔑 JWT       |
+| `GET`   | `/users/:id`                 | Retorna os detalhes de um usuário por ID    | 🔑 JWT       |
+| `PUT`   | `/users/:id`                 | Atualiza informações básicas do usuário     | 🔑 JWT       |
+| `PATCH` | `/users/:id/update-password` | Atualiza especificamente a senha do usuário | 🔑 JWT       |
+| `DELETE`| `/users/:id`                 | Remove permanentemente a conta do usuário   | 🔑 JWT       |
+
+---
+
+### 🔐 Segurança e Regras
+- **Autenticação:** As rotas marcadas com **🔑 JWT** exigem que o token seja enviado no Header da requisição:  
+  `Authorization: Bearer <seu_access_token>`
+- **Validação:** Todos os campos de entrada são validados via **Zod** antes de chegarem aos controllers.
+- **Refresh Token:** Para manter a sessão ativa, utilize a rota de refresh quando o Access Token expirar, garantindo uma melhor experiência de usuário.
 
 ---
 
