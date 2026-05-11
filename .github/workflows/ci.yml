@@ -34,8 +34,7 @@ jobs:
       - name: Sync Database Schema
         run: |
           sleep 10
-          # Adicionamos a flag --skip-generate para focar apenas no push
-          npx prisma db push --force-reset
+          npx prisma db push --url "${{ secrets.DATABASE_URL }}"
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
