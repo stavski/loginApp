@@ -38,6 +38,11 @@ jobs:
       - name: Generate Prisma
         run: npx prisma generate
 
+      - name: Setup Database
+        run: npx prisma db push
+        env:
+          DATABASE_URL: "mysql://root:root@localhost:3306/api_test"
+
       - name: Run Tests
         run: npm test
         env:
