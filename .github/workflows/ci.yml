@@ -3,7 +3,6 @@ name: Node.js CI
 on:
   push:
     branches: [main, master]
-
   pull_request:
     branches: [main, master]
 
@@ -13,25 +12,13 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8
-
+        image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: testdb
-
+          MYSQL_DATABASE: loginAppTest
         ports:
           - 3306:3306
-
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
-
-    env:
-      NODE_OPTIONS: --dns-result-order=ipv4first
-      DATABASE_URL: mysql://root:root@127.0.0.1:3306/testdb
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     defaults:
       run:
@@ -49,26 +36,20 @@ jobs:
           cache-dependency-path: "./backend/package-lock.json"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Install CA certificates
-        run: sudo apt-get update && sudo apt-get install -y ca-certificates
-
-      - name: Wait for MySQL
-        run: |
-          until mysqladmin ping -h 127.0.0.1 -P 3306 -uroot -proot --silent; do
-            echo "Waiting for MySQL..."
-            sleep 2
-          done
-
-      - name: Check Prisma version
-        run: npx prisma -v
+      - name: Sync Database Schema
+        run: npx prisma db push --accept-data-loss
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
 
       - name: Generate Prisma Client
         run: npx prisma generate
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
 
-      - name: Push database schema
-        run: npx prisma db push --accept-data-loss
-
-      - name: Run tests
+      - name: Run Tests
         run: npm test
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
