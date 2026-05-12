@@ -1,9 +1,16 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { api } from '@/services/api';
+import api from "@/services/api";
+
+interface User {
+    id: string;
+    name: string;
+    email: string;
+}
 
 interface AuthContextData {
     signed: boolean;
+    user: User | null;
     signIn: (credentials: object) => Promise<void>;
     signOut: () => void;
     loading: boolean;
@@ -14,14 +21,23 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [signed, setSigned] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         async function loadStorageData() {
-            const accessToken = await SecureStore.getItemAsync('accessToken');
+            const storagedToken = await SecureStore.getItemAsync('accessToken');
 
-            if (accessToken) {
-                api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-                setSigned(true);
+            if (storagedToken) {
+                try {
+                    api.defaults.headers.common['Authorization'] = `Bearer ${storagedToken}`;
+
+                    const response = await api.get('/auth/me');
+
+                    setUser(response.data);
+                    setSigned(true);
+                } catch (error) {
+                    signOut();
+                }
             }
             setLoading(false);
         }
@@ -52,7 +68,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ signed, signIn, signOut, loading }}>
+        <AuthContext.Provider value={{
+            signed: !!user,
+            user,
+            signIn,
+            signOut,
+            loading
+        }}>
             {children}
         </AuthContext.Provider>
     );

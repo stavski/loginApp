@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { styles } from "@/styles/signup.styles";
 import { AccountProps } from "@/types/signup.type";
-import { api } from "@/services/api";
+import api from "@/services/api";
 
 export default function Signup() {
     const emailRef = useRef<TextInput>(null);
