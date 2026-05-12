@@ -2,7 +2,7 @@ import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInpu
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
-import { Link } from "expo-router"
+import { Link, router } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "@/styles/globalStyles";
 import { useForm } from "react-hook-form";
@@ -28,7 +28,12 @@ export default function Signup() {
             });
 
             if (response.status === 201) {
-                Alert.alert("Success", "Account created successfully!");
+                Alert.alert("Success", "Account created successfully!", [
+                    {
+                        text: "OK",
+                        onPress: () => router.replace("/home")
+                    }
+                ]);
             }
         } catch (error: any) {
             if (error.response) {
@@ -110,7 +115,8 @@ export default function Signup() {
                                     placeholder: 'E-mail',
                                     keyboardType: "email-address",
                                     onSubmitEditing: () => passwordRef.current?.focus(),
-                                    returnKeyType: 'next'
+                                    returnKeyType: 'next',
+                                    autoCapitalize: "none"
                                 }}
                             />
                             <Input
