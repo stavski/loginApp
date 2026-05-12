@@ -18,7 +18,11 @@ jobs:
           MYSQL_DATABASE: loginAppTest
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     defaults:
       run:
@@ -41,15 +45,15 @@ jobs:
       - name: Sync Database Schema
         run: npx prisma db push --accept-data-loss
         env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest?connect_timeout=30
 
       - name: Generate Prisma Client
         run: npx prisma generate
         env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest?connect_timeout=30
 
       - name: Run Tests
         run: npm test
         env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest?connect_timeout=30
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
