@@ -11,8 +11,27 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8
+
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testdb
+
+        ports:
+          - 3306:3306
+
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     env:
       NODE_OPTIONS: --dns-result-order=ipv4first
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/testdb
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     defaults:
       run:
@@ -35,22 +54,21 @@ jobs:
       - name: Install CA certificates
         run: sudo apt-get update && sudo apt-get install -y ca-certificates
 
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping -h 127.0.0.1 -P 3306 -uroot -proot --silent; do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
       - name: Check Prisma version
         run: npx prisma -v
 
       - name: Generate Prisma Client
         run: npx prisma generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Push database schema
         run: npx prisma db push --accept-data-loss
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DEBUG: "*"
 
       - name: Run tests
         run: npm test
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
