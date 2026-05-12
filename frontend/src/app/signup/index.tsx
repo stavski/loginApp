@@ -166,7 +166,7 @@ export default function Signup() {
                         <Text style={styles.footerText}>
                             Already have an account? {" "}
                             <Link
-                                href="/login"
+                                href="/"
                                 style={styles.footerLink}
                             >
                                 Click here.
