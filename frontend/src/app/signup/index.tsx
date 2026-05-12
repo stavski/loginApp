@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput} from "react-native"
+import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput, Alert } from "react-native"
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
@@ -9,16 +9,42 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { styles } from "@/styles/signup.styles";
 import { AccountProps } from "@/types/signup.type";
+import { api } from "@/services/api";
 
 export default function Signup() {
     const emailRef = useRef<TextInput>(null);
     const passwordRef = useRef<TextInput>(null);
     const passwordConfirmationRef = useRef<TextInput>(null);
 
-    const {control, handleSubmit, formState: {errors}, getValues } = useForm<AccountProps>();
-    
-    function handleSignIn(data: AccountProps) {
-        console.log(data);
+    const { control, handleSubmit, formState: { errors, isSubmitting }, getValues } = useForm<AccountProps>();
+
+    async function handleSignIn(data: AccountProps) {
+        try {
+            const response = await api.post('/users', {
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                passwordConfirmation: data.passwordConfirmation
+            });
+
+            if (response.status === 201) {
+                Alert.alert("Success", "Account created successfully!");
+            }
+        } catch (error: any) {
+            if (error.response) {
+                const serverError = error.response.data.error;
+
+                if (error.response.status === 409 && serverError.email) {
+                    Alert.alert("Conflict", serverError.email);
+                } else {
+                    Alert.alert("Error", typeof serverError === 'string' ? serverError : "Something went wrong");
+                }
+            } else {
+                Alert.alert("Network Error", "Could not connect to the server.");
+            }
+
+            console.error("API Error:", error.response?.data);
+        }
     }
 
     function validationPasswordConfirmation(passwordConfirmation: string) {
@@ -29,16 +55,16 @@ export default function Signup() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#FDFDFD" }}>
-            <KeyboardAvoidingView 
-                style={{ flex: 1 }} 
-                behavior={ Platform.select({ ios: "padding", android: "height" }) }
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.select({ ios: "padding", android: "height" })}
             >
-                <ScrollView 
+                <ScrollView
                     style={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={globalStyles.container}>
-                        <Image 
+                        <Image
                             source={require("@/assets/signup.png")}
                             style={styles.illustration}
                         />
@@ -47,7 +73,7 @@ export default function Signup() {
                         <Text style={globalStyles.subtitle}>Create your account to gain access.</Text>
 
                         <View style={globalStyles.form}>
-                            <Input 
+                            <Input
                                 error={errors.name?.message}
                                 formProps={{
                                     name: 'name',
@@ -60,13 +86,13 @@ export default function Signup() {
                                         }
                                     }
                                 }}
-                                inputProps={{ 
+                                inputProps={{
                                     placeholder: 'Name',
                                     onSubmitEditing: () => emailRef.current?.focus(),
                                     returnKeyType: 'next'
                                 }}
                             />
-                            <Input 
+                            <Input
                                 error={errors.email?.message}
                                 ref={emailRef}
                                 formProps={{
@@ -80,14 +106,14 @@ export default function Signup() {
                                         }
                                     }
                                 }}
-                                inputProps={{ 
+                                inputProps={{
                                     placeholder: 'E-mail',
-                                    keyboardType: "email-address" ,
+                                    keyboardType: "email-address",
                                     onSubmitEditing: () => passwordRef.current?.focus(),
                                     returnKeyType: 'next'
                                 }}
                             />
-                            <Input 
+                            <Input
                                 error={errors.password?.message}
                                 ref={passwordRef}
                                 formProps={{
@@ -101,14 +127,14 @@ export default function Signup() {
                                         }
                                     }
                                 }}
-                                inputProps={{ 
-                                    placeholder: 'Password', 
+                                inputProps={{
+                                    placeholder: 'Password',
                                     secureTextEntry: true,
                                     onSubmitEditing: () => passwordConfirmationRef.current?.focus(),
                                     returnKeyType: 'next'
                                 }}
                             />
-                            <Input 
+                            <Input
                                 error={errors.passwordConfirmation?.message}
                                 ref={passwordConfirmationRef}
                                 formProps={{
@@ -119,17 +145,21 @@ export default function Signup() {
                                         validate: validationPasswordConfirmation,
                                     }
                                 }}
-                                inputProps={{ 
-                                    placeholder: 'Password Confirmation', 
+                                inputProps={{
+                                    placeholder: 'Password Confirmation',
                                     secureTextEntry: true
                                 }}
                             />
-                            <Button label="Save" onPress={handleSubmit(handleSignIn)}/>
+                            <Button
+                                label={isSubmitting ? "Loading..." : "Save"}
+                                onPress={handleSubmit(handleSignIn)}
+                                disabled={isSubmitting}
+                            />
                         </View>
 
                         <Text style={styles.footerText}>
                             Already have an account? {" "}
-                            <Link 
+                            <Link
                                 href="/login"
                                 style={styles.footerLink}
                             >
