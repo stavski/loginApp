@@ -29,7 +29,7 @@ jobs:
         run: npm install
 
       - name: Sync Database Schema
-        run: npx prisma db push --url "${{ secrets.DATABASE_URL }}" --accept-data-loss
+        run: npx prisma db push --accept-data-loss
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
