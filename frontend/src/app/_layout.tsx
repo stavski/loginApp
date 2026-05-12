@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Stack, useRouter, useSegments } from "expo-router";
-import { AuthProvider, useAuth } from "../contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
 function RootLayoutNav() {
     const { signed, loading } = useAuth();
@@ -10,27 +10,25 @@ function RootLayoutNav() {
     useEffect(() => {
         if (loading) return;
 
-        const rootSegment = segments[0];
+        const inAuthGroup = segments[0] === "(auth)";
 
-        const isAuthRoute = rootSegment === "signup" || rootSegment === undefined;
-
-        if (!signed && !isAuthRoute) {
+        if (!signed && inAuthGroup) {
             router.replace("/");
-        } else if (signed && isAuthRoute) {
+        } else if (signed && segments[0] === "(public)") {
             router.replace("/home");
         }
     }, [signed, loading, segments]);
 
     return (
         <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="signup/index" />
-            <Stack.Screen name="home/index" />
+            <Stack.Screen name="(public)/index" />
+            <Stack.Screen name="(public)/signup" />
+            <Stack.Screen name="(auth)/home" />
         </Stack>
     );
 }
 
-export default function Layout() {
+export default function RootLayout() {
     return (
         <AuthProvider>
             <RootLayoutNav />
