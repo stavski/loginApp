@@ -42,18 +42,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
       - name: Sync Database Schema
         run: npx prisma db push --accept-data-loss
         env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest?connect_timeout=30
-
-      - name: Generate Prisma Client
-        run: npx prisma generate
-        env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest?connect_timeout=30
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
 
       - name: Run Tests
         run: npm test
         env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest?connect_timeout=30
+          NODE_ENV: test
+          DATABASE_HOST: 127.0.0.1
+          DATABASE_USER: root
+          DATABASE_PASSWORD: root
+          DATABASE_NAME: loginAppTest
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/loginAppTest
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
