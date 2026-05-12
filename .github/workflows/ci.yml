@@ -21,20 +21,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: "./backend/package-lock.json"
 
       - name: Install dependencies
         run: npm install
 
-      - name: Generate Prisma
-        run: npx prisma generate
-
       - name: Sync Database Schema
         run: |
-          sleep 10
-          npx prisma db push --url "${{ secrets.DATABASE_URL }}"
+          # Aguarda o banco da Aiven estabilizar
+          sleep 5
+          # A flag --url força o Prisma a ignorar o que está no arquivo schema.prisma
+          npx prisma db push --url "${{ secrets.DATABASE_URL }}" --accept-data-loss
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
