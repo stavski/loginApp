@@ -3,12 +3,16 @@ name: Node.js CI
 on:
   push:
     branches: [main, master]
+
   pull_request:
     branches: [main, master]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
+    env:
+      NODE_OPTIONS: --dns-result-order=ipv4first
 
     defaults:
       run:
@@ -26,19 +30,26 @@ jobs:
           cache-dependency-path: "./backend/package-lock.json"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Sync Database Schema
-        run: npx prisma db push --accept-data-loss
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: Install CA certificates
+        run: sudo apt-get update && sudo apt-get install -y ca-certificates
+
+      - name: Check Prisma version
+        run: npx prisma -v
 
       - name: Generate Prisma Client
         run: npx prisma generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Run Tests
+      - name: Push database schema
+        run: npx prisma db push --accept-data-loss --skip-generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DEBUG: "*"
+
+      - name: Run tests
         run: npm test
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
