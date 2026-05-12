@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput } from "react-native"
+import { View, Text, Image, ScrollView, KeyboardAvoidingView, Platform, TextInput, Alert } from "react-native"
 
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
@@ -6,16 +6,32 @@ import { Link } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "@/styles/globalStyles";
 import { useForm } from "react-hook-form";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { styles } from "@/styles/login.styles";
 import { LoginFormData } from "@/types/login.types";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Index() {
-  const { control, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
+  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>();
   const passwordRef = useRef<TextInput>(null);
 
-  function handleSignIn(data: any) {
-    console.log(data);
+  const { signIn } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleSignIn(data: LoginFormData) {
+    setIsLoading(true);
+    try {
+
+      await signIn(data);
+
+    } catch (error: any) {
+      Alert.alert(
+        "Login failed",
+        "Invalid email or password."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -74,7 +90,11 @@ export default function Index() {
                   secureTextEntry: true
                 }}
               />
-              <Button label="Login" onPress={handleSubmit(handleSignIn)} />
+              <Button
+                label={isSubmitting ? "Loading..." : "Login"}
+                onPress={handleSubmit(handleSignIn)}
+                disabled={isSubmitting}
+              />
             </View>
 
             <Text style={styles.footerText}>

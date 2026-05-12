@@ -17,10 +17,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         async function loadStorageData() {
-            const token = await SecureStore.getItemAsync('token');
+            const accessToken = await SecureStore.getItemAsync('accessToken');
 
-            if (token) {
-                api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            if (accessToken) {
+                api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
                 setSigned(true);
             }
             setLoading(false);
@@ -30,13 +30,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     async function signIn(credentials: object) {
         try {
-            const response = await api.post('/sessions', credentials);
-            const { token, refreshToken } = response.data;
+            const response = await api.post('/auth/login', credentials);
 
-            await SecureStore.setItemAsync('token', token);
+            const { accessToken, refreshToken } = response.data;
+
+            await SecureStore.setItemAsync('accessToken', accessToken);
             await SecureStore.setItemAsync('refreshToken', refreshToken);
 
-            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
             setSigned(true);
         } catch (error) {
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     function signOut() {
-        SecureStore.deleteItemAsync('token');
+        SecureStore.deleteItemAsync('accessToken');
         SecureStore.deleteItemAsync('refreshToken');
         setSigned(false);
     }
