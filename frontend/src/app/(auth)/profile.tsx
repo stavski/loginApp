@@ -58,6 +58,37 @@ export default function Profile() {
         }
     }
 
+    async function handleDeleteAccount() {
+        Alert.alert(
+            "Delete Account",
+            "Are you sure you want to delete your account? This action cannot be undone.",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            const response = await api.delete(`/users/${user?.id}`);
+
+                            console.log(response.status);
+
+                            if (response.status === 204) {
+                                Alert.alert("Deleted", "Your account has been removed.");
+
+                                signOut();
+                            } else {
+                                Alert.alert("Error", "Something went wrong.");
+                            }
+                        } catch (error) {
+                            Alert.alert("Error", "Could not delete account. Try again later.");
+                        }
+                    }
+                }
+            ]
+        );
+    }
+
     return (
         <SafeAreaView style={styles.safeArea} edges={['top']}>
             <Stack.Screen options={{ headerTitle: "My Profile", headerShown: true }} />
@@ -139,6 +170,16 @@ export default function Profile() {
                             <Text style={styles.secondaryButtonText}>Change Password</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <View style={styles.section}>
+                        <TouchableOpacity
+                            style={styles.deleteButton}
+                            onPress={handleDeleteAccount}
+                        >
+                            <Text style={styles.deleteText}>Delete Account</Text>
+                        </TouchableOpacity>
+                    </View>
+
 
                     {/* Logout */}
                     <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
