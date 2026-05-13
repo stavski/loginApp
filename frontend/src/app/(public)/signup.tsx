@@ -114,7 +114,8 @@ export default function Signup() {
                                     keyboardType: "email-address",
                                     onSubmitEditing: () => passwordRef.current?.focus(),
                                     returnKeyType: 'next',
-                                    autoCapitalize: "none"
+                                    autoCapitalize: "none",
+                                    autoCorrect: false,
                                 }}
                             />
                             <Input
@@ -135,7 +136,9 @@ export default function Signup() {
                                     placeholder: 'Password',
                                     secureTextEntry: true,
                                     onSubmitEditing: () => passwordConfirmationRef.current?.focus(),
-                                    returnKeyType: 'next'
+                                    returnKeyType: 'next',
+                                    textContentType: 'oneTimeCode',
+                                    importantForAutofill: 'no',
                                 }}
                             />
                             <Input

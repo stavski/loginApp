@@ -5,6 +5,20 @@ const api = axios.create({
     baseURL: 'http://192.168.2.142:3333',
 });
 
+api.interceptors.request.use(async (config) => {
+    try {
+        const token = await SecureStore.getItemAsync('accessToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+    } catch (error) {
+        console.error("Error fetching token from SecureStore", error);
+    }
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
 api.interceptors.response.use((response) => response, async (error) => {
     const originalRequest = error.config;
 
@@ -34,8 +48,8 @@ api.interceptors.response.use((response) => response, async (error) => {
             return Promise.reject(refreshError);
         }
     }
+
     return Promise.reject(error);
-}
-);
+});
 
 export default api;

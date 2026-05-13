@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import { Stack, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -90,13 +90,16 @@ export default function Profile() {
                                 inputProps={{
                                     placeholder: 'Name',
                                     style: styles.input,
+                                    returnKeyType: 'next',
                                     onSubmitEditing: () => emailRef.current?.focus(),
                                 }}
                             />
-
+                        </View>
+                        <View style={styles.inputGroup}>
                             <Text style={styles.label}>Email</Text>
                             <Input
                                 error={errors.email?.message}
+                                ref={emailRef}
                                 formProps={{
                                     name: 'email',
                                     control,
@@ -111,14 +114,15 @@ export default function Profile() {
                                 inputProps={{
                                     placeholder: 'Email',
                                     keyboardType: "email-address",
+                                    autoCapitalize: "none",
+                                    autoCorrect: false,
                                     style: styles.input,
-                                    onSubmitEditing: () => emailRef.current?.focus(),
                                 }}
                             />
                         </View>
 
                         <Button
-                            label={isSubmitting ? "Loading..." : "Save Changes"}
+                            label={isSubmitting ? "Loading..." : "Save"}
                             onPress={handleSubmit(handleSignIn)}
                             disabled={isSubmitting}
                         />
@@ -128,7 +132,10 @@ export default function Profile() {
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Security</Text>
 
-                        <TouchableOpacity style={styles.secondaryButton}>
+                        <TouchableOpacity
+                            style={styles.secondaryButton}
+                            onPress={() => router.push("/change-password")}
+                        >
                             <Text style={styles.secondaryButtonText}>Change Password</Text>
                         </TouchableOpacity>
                     </View>
@@ -137,7 +144,6 @@ export default function Profile() {
                     <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
                         <Text style={styles.logoutText}>Sign Out</Text>
                     </TouchableOpacity>
-
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView >

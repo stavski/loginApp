@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
         color: "#1C1C1E"
     },
     inputGroup: { marginBottom: 15 },
-    label: { fontSize: 12, fontWeight: "600", color: "#8E8E93", marginBottom: 5 },
+    label: { fontSize: 13, fontWeight: "600", color: "#8E8E93", marginBottom: 5 },
     input: {
         backgroundColor: "#F2F2F7",
         padding: 12,
