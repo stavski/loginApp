@@ -31,7 +31,7 @@ export default function Signup() {
                 Alert.alert("Success", "Account created successfully!", [
                     {
                         text: "OK",
-                        onPress: () => router.replace("/home")
+                        onPress: () => router.replace("/")
                     }
                 ]);
             }

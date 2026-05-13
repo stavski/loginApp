@@ -17,6 +17,8 @@ export default function ChangePassword() {
 
     const { user } = useAuth();
 
+    if (!user) return null;
+
     const { control, handleSubmit, formState: { errors, isSubmitting }, getValues } = useForm<ChangePasswordFormData>();
 
     async function handleSignIn(data: ChangePasswordFormData) {

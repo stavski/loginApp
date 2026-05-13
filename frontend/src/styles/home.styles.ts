@@ -21,4 +21,40 @@ export const styles = StyleSheet.create({
         color: "#1C1C1E",
         marginTop: 5,
     },
+    filterContainer: { padding: 15, backgroundColor: '#fff' },
+    filterInput: {
+        height: 40,
+        backgroundColor: '#F3F3F3',
+        borderRadius: 8,
+        paddingHorizontal: 15,
+    },
+    userCard: {
+        padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+        backgroundColor: '#fff'
+    },
+    userNameInList: { fontSize: 16, fontWeight: 'bold' },
+    userEmailInList: { color: '#666' },
+    headerContainer: {
+        padding: 20,
+        backgroundColor: '#fff',
+        width: '100%',
+    },
+    welcomeSection: {
+        marginBottom: 20,
+    },
+    searchSection: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#F2F2F7',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+    },
+    searchInput: {
+        flex: 1,
+        height: 40,
+        marginLeft: 8,
+        fontSize: 16,
+    },
 });

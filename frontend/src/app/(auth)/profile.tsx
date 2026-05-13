@@ -14,6 +14,8 @@ import api from "@/services/api";
 export default function Profile() {
     const { user, signOut, updateUser } = useAuth();
 
+    if (!user) return null;
+
     const emailRef = useRef<TextInput>(null);
 
     const { control, handleSubmit, reset, formState: { errors, isSubmitting }, getValues } = useForm<AccountProps>();
