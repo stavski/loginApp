@@ -4,7 +4,7 @@ import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
 import { Link } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context";
-import { globalStyles } from "@/styles/globalStyles";
+import { globalStyles } from "@/styles/global.styles";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { styles } from "@/styles/login.styles";

@@ -1,12 +1,7 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import api from "@/services/api";
-
-interface User {
-    id: string;
-    name: string;
-    email: string;
-}
+import { User } from "@/types/user.types";
 
 interface AuthContextData {
     signed: boolean;
@@ -14,12 +9,13 @@ interface AuthContextData {
     signIn: (credentials: object) => Promise<void>;
     signOut: () => void;
     loading: boolean;
+    updateUser: (newUser: User) => void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [signed, setSigned] = useState(false);
+    const [signed] = useState(false);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<User | null>(null);
 
@@ -33,8 +29,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
                     const response = await api.get('/auth/me');
 
-                    setUser(response.data);
-                    setSigned(true);
+                    const userData = response.data.data ? response.data.data : response.data;
+
+                    setUser(userData);
+
                 } catch (error) {
                     signOut();
                 }
@@ -48,23 +46,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const response = await api.post('/auth/login', credentials);
 
-            const { accessToken, refreshToken } = response.data;
+            const { accessToken, refreshToken, user: userData } = response.data;
 
             await SecureStore.setItemAsync('accessToken', accessToken);
             await SecureStore.setItemAsync('refreshToken', refreshToken);
 
             api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-            setSigned(true);
+            setUser(userData);
+
         } catch (error) {
             throw error;
         }
     }
 
-    function signOut() {
-        SecureStore.deleteItemAsync('accessToken');
-        SecureStore.deleteItemAsync('refreshToken');
-        setSigned(false);
+    async function signOut() {
+        try {
+            await SecureStore.deleteItemAsync('accessToken');
+            await SecureStore.deleteItemAsync('refreshToken');
+
+            setUser(null);
+
+        } catch (error) {
+            console.error("Error during sign out:", error);
+        }
+    }
+
+    function updateUser(newUser: User) {
+        setUser(newUser);
     }
 
     return (
@@ -73,7 +82,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             user,
             signIn,
             signOut,
-            loading
+            loading,
+            updateUser
         }}>
             {children}
         </AuthContext.Provider>

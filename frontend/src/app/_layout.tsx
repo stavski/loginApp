@@ -24,6 +24,7 @@ function RootLayoutNav() {
             <Stack.Screen name="(public)/index" />
             <Stack.Screen name="(public)/signup" />
             <Stack.Screen name="(auth)/home" />
+            <Stack.Screen name="(auth)/profile" />
         </Stack>
     );
 }

@@ -4,7 +4,7 @@ import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
 import { Link, router } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context";
-import { globalStyles } from "@/styles/globalStyles";
+import { globalStyles } from "@/styles/global.styles";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { styles } from "@/styles/signup.styles";
@@ -47,8 +47,6 @@ export default function Signup() {
             } else {
                 Alert.alert("Network Error", "Could not connect to the server.");
             }
-
-            console.error("API Error:", error.response?.data);
         }
     }
 
@@ -92,7 +90,7 @@ export default function Signup() {
                                     }
                                 }}
                                 inputProps={{
-                                    placeholder: 'Name',
+                                    placeholder: 'Full Name',
                                     onSubmitEditing: () => emailRef.current?.focus(),
                                     returnKeyType: 'next'
                                 }}
